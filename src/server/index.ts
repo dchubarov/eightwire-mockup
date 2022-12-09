@@ -29,6 +29,7 @@ export function makeServer(environment?: string) {
             })
 
             this.logging = true
+            this.timing = 0
         }
     })
 }

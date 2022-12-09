@@ -10,7 +10,7 @@ import UserMenu from "./UserMenu";
 import LoginForm from "./LoginForm";
 
 const App: React.FC = () => {
-    const [serverHealth, setServerHealth] = useState<HealthResponse>({})
+    const [serverHealth, setServerHealth] = useState<HealthResponse>({status: "OK"})
     const [userInfo, setUserInfo] = useState<User | undefined>()
     const [cookies] = useCookies(["user"])
 
@@ -45,7 +45,9 @@ const App: React.FC = () => {
             }}>
                 <img src="/logo.png" width="300" height="80" alt="Logo"/>
 
-                {userInfo ? <UserMenu user={userInfo}/> : <LoginForm/>}
+                {userInfo && <UserMenu user={userInfo}/>}
+
+                {(cookies.user === undefined || serverHealth.status !== "OK") && <LoginForm/>}
 
                 <Box sx={{position: "absolute", right: 0, bottom: 0, p: 1}}>
                     <Typography variant="body2" color="text.secondary">

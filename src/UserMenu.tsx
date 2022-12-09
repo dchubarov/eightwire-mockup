@@ -1,7 +1,7 @@
 import React from "react";
 import {User} from "./server/model";
 import {Avatar, Box, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Typography} from "@mui/material";
-import {Person3 as UserIcon, Verified as VerifiedIcon} from "@mui/icons-material";
+import {Logout as LogoutIcon, Person3 as UserIcon, Verified as VerifiedIcon} from "@mui/icons-material";
 import {useCookies} from "react-cookie";
 
 interface UserMenuProps {
@@ -18,9 +18,10 @@ const UserMenu: React.FC<UserMenuProps> = ({user}) => {
     return (
         <List>
             <ListItem>
-                <ListItemButton>
+                <ListItemButton component="a" href="dashboard">
                     <ListItemAvatar>
-                        <Avatar>
+                        <Avatar src={`/img/avatar/${user.id}.png`} variant="circular"
+                                sx={theme => {return {border:`1px solid ${theme.palette.divider}`}}}>
                             <UserIcon/>
                         </Avatar>
                     </ListItemAvatar>
@@ -36,7 +37,9 @@ const UserMenu: React.FC<UserMenuProps> = ({user}) => {
 
             <ListItem sx={{pl: 4}}>
                 <ListItemButton onClick={handleSignOut}>
-                    <ListItemText primary={<Typography component="span" color="error">Sign Out</Typography>}/>
+                    <ListItemText primary={<Typography component="span" color="error"
+                                                       sx={{display: "flex", alignItems: "center"}}>Sign Out <LogoutIcon
+                        fontSize="small" sx={{ml: 1}}/></Typography>}/>
                 </ListItemButton>
             </ListItem>
         </List>
