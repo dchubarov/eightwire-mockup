@@ -1,0 +1,15 @@
+[
+  {
+    "id": "owner",
+    "kind": "owner",
+    "display": "The Owner"
+  },
+  {
+    "id": "john",
+    "kind": "customer",
+    "verified": true,
+    "display": "John D.",
+    "regionId": "usa",
+    "payInId": "john-pm-1"
+  }
+]

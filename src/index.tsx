@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import App from './App';
-import {makeServer} from "./server";
+import {makeApiServer} from "./api/server";
 import reportWebVitals from './reportWebVitals';
 
 import '@fontsource/roboto/300.css';
@@ -13,7 +13,7 @@ import '@fontsource/roboto/700.css';
 import './index.css';
 import {CookiesProvider} from "react-cookie";
 
-makeServer(process.env.NODE_ENV)
+makeApiServer(process.env.NODE_ENV)
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement

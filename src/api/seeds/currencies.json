@@ -1,0 +1,12 @@
+[
+  {
+    "id": "usd",
+    "display": "US Dollar",
+    "symbol": "$"
+  },
+  {
+    "id": "gel",
+    "display": "Georgian Lari",
+    "symbol": "₾"
+  }
+]
