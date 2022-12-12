@@ -9,6 +9,7 @@ import initialUsers from "./seeds/users.json"
 
 export function makeApiServer(env?: string): Server {
     return createServer({
+        logging: process.env.NODE_ENV === "development",
         namespace: "/api",
         environment: env,
         models: AppModels,
@@ -16,8 +17,6 @@ export function makeApiServer(env?: string): Server {
         serializers: {
             application: JSONAPISerializer
         },
-        logging: process.env.NODE_ENV === "development",
-        timing: 0,
 
         seeds(server: Server<AppRegistry>) {
             server.db.loadData({
@@ -35,7 +34,18 @@ export function makeApiServer(env?: string): Server {
 
             this.get("/users/:id", (schema: AppSchema, request) => {
                 return schema.find("user", request.params.id) || new Response(404)
-            })
+            });
+
+            this.get("/health", () => {
+                return {
+                    data: {
+                        status: "OK",
+                        version: "1.0.0-mockup",
+                    }
+                }
+            });
+
+            this.timing = 0;
         }
     })
 }
