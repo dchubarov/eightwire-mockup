@@ -10,6 +10,17 @@
     "verified": true,
     "display": "John D.",
     "regionId": "usa",
-    "payInId": "john-pm-1"
+    "payInId": "john-pm-1",
+    "trustedIds": ["hanna"]
+  },
+  {
+    "id": "hanna",
+    "kind": "customer",
+    "verified": true,
+    "display": "Hanna L.",
+    "regionId": "geo",
+    "payInId": "hanna-pm-1",
+    "payOutId": "hanna-pm-1",
+    "trustedIds": ["john"]
   }
 ]

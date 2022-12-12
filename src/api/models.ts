@@ -1,5 +1,5 @@
 import {ModelDefinition, Registry} from "miragejs/-types";
-import {belongsTo, Model} from "miragejs";
+import {belongsTo, hasMany, Model} from "miragejs";
 import Schema from "miragejs/orm/schema";
 
 interface CurrencyAttributes {
@@ -38,7 +38,8 @@ interface UserAttributes {
 const UserModel: ModelDefinition<UserAttributes> = Model.extend({
     region: belongsTo("region"),
     payIn: belongsTo("paymentMethod"),
-    payOut: belongsTo("paymentMethod")
+    payOut: belongsTo("paymentMethod"),
+    trusted: hasMany("user")
 })
 
 export const AppModels = {

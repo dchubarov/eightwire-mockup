@@ -3,5 +3,10 @@
     "id": "john-pm-1",
     "display": "Apple Pay",
     "currencyId": "usd"
+  },
+  {
+    "id": "hanna-pm-1",
+    "currencyId": "gel",
+    "display": "Bank account GE341B***123GEL"
   }
 ]
