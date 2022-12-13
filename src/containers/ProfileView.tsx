@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {List, ListItem, ListItemIcon, ListItemText, Typography} from "@mui/material";
+import {List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {useLoginUser} from "../hooks";
 import axios from "axios";
@@ -13,8 +13,9 @@ import {
     Verified as VerifiedIcon,
 } from "@mui/icons-material";
 import UserCard from "../components/UserCard";
+import PageTitle from "../components/PageTitle";
 
-const Profile: React.FC = () => {
+const ProfileView: React.FC = () => {
     const [profile, setProfile] = useState<any>({})
     const loginUser = useLoginUser()
     const navigate = useNavigate()
@@ -30,7 +31,7 @@ const Profile: React.FC = () => {
 
     return profile.id ? (
         <>
-            <Typography variant="h4">Profile: {profile.id}</Typography>
+            <PageTitle title="Profile" username={profile.id}/>
 
             <List>
                 <ListItem>
@@ -101,4 +102,4 @@ const Profile: React.FC = () => {
     ) : null
 }
 
-export default Profile;
+export default ProfileView;

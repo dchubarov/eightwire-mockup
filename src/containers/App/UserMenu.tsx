@@ -32,6 +32,18 @@ const UserMenu: React.FC<UserMenuProps> = ({user}) => {
             </ListItem>
 
             <ListItem sx={UserMenuItemSxProps}>
+                <ListItemButton onClick={() => navigate("/orders")}>
+                    <ListItemText primary="Money transfer orders"/>
+                </ListItemButton>
+            </ListItem>
+
+            <ListItem sx={UserMenuItemSxProps}>
+                <ListItemButton onClick={() => navigate("/transactions")}>
+                    <ListItemText primary="Transactions"/>
+                </ListItemButton>
+            </ListItem>
+
+            <ListItem sx={UserMenuItemSxProps}>
                 <ListItemButton onClick={handleSignOut}>
                     <ListItemText primary={
                         <Typography component="span" color="error"
