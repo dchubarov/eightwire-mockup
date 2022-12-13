@@ -5,9 +5,23 @@ import Schema from "miragejs/orm/schema";
 interface CurrencyAttributes {
     display: string
     symbol: string
+    mde: number
 }
 
 const CurrencyModel: ModelDefinition<CurrencyAttributes> = Model.extend({})
+
+interface ExchangeRateAttributes {
+    fromCurrencyId: string
+    fromUnitsMde: number
+    toCurrencyId: string
+    toUnitsMde: number
+    rate: number
+}
+
+const ExchangeRateModel: ModelDefinition<ExchangeRateAttributes> = Model.extend({
+    fromCurrency: belongsTo("currency"),
+    toCurrency: belongsTo("currency")
+})
 
 interface RegionAttributes {
     display: string
@@ -44,6 +58,7 @@ const UserModel: ModelDefinition<UserAttributes> = Model.extend({
 
 export const AppModels = {
     currency: CurrencyModel,
+    rate: ExchangeRateModel,
     region: RegionModel,
     paymentMethod: PaymentMethodModel,
     user: UserModel

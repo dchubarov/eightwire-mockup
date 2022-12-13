@@ -3,6 +3,7 @@ import {createServer, JSONAPISerializer, Response} from "miragejs";
 import {AppFactories, AppModels, AppRegistry, AppSchema} from "./models";
 
 import initialCurrencies from "./seeds/currencies.json"
+import initialExchangeRates from "./seeds/exchange-rates.json"
 import initialRegions from "./seeds/regions.json"
 import initialPaymentMethods from "./seeds/payment-methods.json"
 import initialUsers from "./seeds/users.json"
@@ -21,6 +22,7 @@ export function makeApiServer(env?: string): Server {
         seeds(server: Server<AppRegistry>) {
             server.db.loadData({
                 currencies: initialCurrencies,
+                rates: initialExchangeRates,
                 regions: initialRegions,
                 paymentMethods: initialPaymentMethods,
                 users: initialUsers,
@@ -34,15 +36,6 @@ export function makeApiServer(env?: string): Server {
 
             this.get("/users/:id", (schema: AppSchema, request) => {
                 return schema.find("user", request.params.id) || new Response(404)
-            });
-
-            this.get("/health", () => {
-                return {
-                    data: {
-                        status: "OK",
-                        version: "1.0.0-mockup",
-                    }
-                }
             });
 
             this.timing = 0;
