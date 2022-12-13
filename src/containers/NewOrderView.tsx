@@ -1,16 +1,36 @@
 import React, {useEffect, useState} from "react";
 import {useLoginUser} from "../hooks";
 import PageTitle from "../components/PageTitle";
-import {InputAdornment, List, ListItem, ListItemIcon, ListItemText, MenuItem, Select, TextField} from "@mui/material";
-import {Filter1 as NumberOneIcon, Filter2 as NumberTwoIcon, Filter3 as NumberThreeIcon} from "@mui/icons-material";
+import {
+    Button, Checkbox, FormControlLabel, FormGroup, Grid,
+    InputAdornment,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    MenuItem,
+    Select,
+    TextField, Typography
+} from "@mui/material";
+import {
+    Filter1 as NumberOneIcon,
+    Filter2 as NumberTwoIcon,
+    Filter3 as NumberThreeIcon,
+    NavigateNext as NextStepIcon,
+} from "@mui/icons-material";
 import axios from "axios";
 import {deserialize} from "json-api-deserialize";
+import {useNavigate} from "react-router-dom";
 
 const NewOrderView: React.FC = () => {
     const [payerData, setPayerData] = useState<any>({})
-    const [recipient, setRecipient] = useState("")
+    const [orderDraft, setOrderDraft] = useState<any>({})
+    const [consent1, setConsent1] = useState(false)
+    const [consent2, setConsent2] = useState(false)
+    const [payeeId, setPayeeId] = useState("")
     const [amount, setAmount] = useState(100)
     const loginUser = useLoginUser()
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (loginUser.id) {
@@ -20,10 +40,31 @@ const NewOrderView: React.FC = () => {
         }
     }, [loginUser])
 
+    const handleCreateDraft = () => {
+        const req = {
+            payer: payerData.id,
+            payee: payeeId,
+            amount: amount
+        }
+
+        axios.post(`/api/orders?include=payer-method.currency,payee-method.currency`, req)
+            .then(response => setOrderDraft(deserialize(response.data).data))
+            .catch(() => setOrderDraft({}))
+    }
+
+    const handlePlaceOrder = () => {
+    }
+
+    const handleCancelOrder = async () => {
+        await axios.delete(`/api/orders/${orderDraft.id}`)
+        navigate("/orders")
+    }
+
     return loginUser.id ? (
         <>
             <PageTitle title="New order" username={loginUser.id}/>
-            {payerData.id && <List>
+
+            {(orderDraft.status !== "created" && payerData.id) && <List>
                 <ListItem>
                     <ListItemIcon>
                         <NumberOneIcon/>
@@ -42,7 +83,7 @@ const NewOrderView: React.FC = () => {
                 </ListItem>
 
                 <ListItem sx={{pl: 8}}>
-                    <Select value={recipient} onChange={e => setRecipient(e.target.value)} sx={{width: 200}}>
+                    <Select value={payeeId} onChange={e => setPayeeId(e.target.value)} sx={{width: 200}}>
                         {payerData.trusted.map((item: any, index: number) =>
                             <MenuItem key={`item-${index}`} value={item.id}>{item.display || item.id}</MenuItem>)}
                     </Select>
@@ -68,8 +109,67 @@ const NewOrderView: React.FC = () => {
                                    </InputAdornment>
                                }}/>
                 </ListItem>
+
+                <ListItem sx={{pl: 8}}>
+                    <Button
+                        onClick={handleCreateDraft}
+                        disabled={payeeId === "" || isNaN(amount) || amount <= 0}
+                        variant="contained"
+                        endIcon={<NextStepIcon/>}
+                        sx={{mt: 2}}>Save & Review</Button>
+                </ListItem>
             </List>}
 
+            {orderDraft.status === "created" && <Grid spacing={1} container>
+                <Grid item xs={12}>
+                    <Typography variant="h6">Order #{orderDraft.id}</Typography>
+                </Grid>
+
+                <Grid item xs={8}>You pay:</Grid>
+                <Grid item xs textAlign="right">
+                    {`${orderDraft.paymentAmount} ${orderDraft.payerMethod.currency.id.toUpperCase()}`}
+                </Grid>
+
+                {orderDraft.paymentServiceFee !== 0 && <>
+                    <Grid item xs={8}>Including service fee:</Grid>
+                    <Grid item xs={4} textAlign="right">
+                        {`${orderDraft.paymentServiceFee} ${orderDraft.payerMethod.currency.id.toUpperCase()}`}
+                    </Grid>
+                </>}
+
+                {orderDraft.paymentFee !== 0 && <>
+                    <Grid item xs={8}>Including transaction fee:</Grid>
+                    <Grid item xs={4} textAlign="right">
+                        {`${orderDraft.paymentFee} ${orderDraft.payerMethod.currency.id.toUpperCase()}`}
+                    </Grid>
+                </>}
+
+                <Grid item xs={8}>Your correspondent will receive:</Grid>
+                <Grid item xs={4} textAlign="right">
+                    {`${orderDraft.payoutAmount - orderDraft.payoutFee} ${orderDraft.payeeMethod.currency?.id.toUpperCase()}`}
+                </Grid>
+
+                {orderDraft.payoutFee !== 0 && <>
+                    <Grid item xs={8}>Deducted transaction fee:</Grid>
+                    <Grid item xs={4} textAlign="right">
+                        {`${orderDraft.payoutFee} ${orderDraft.payeeMethod.currency.id.toUpperCase()}`}
+                    </Grid>
+                </>}
+
+                <Grid item xs={12}>
+                    <FormGroup>
+                        <FormControlLabel control={<Checkbox value={consent1} onChange={e=>setConsent1(e.target.checked)}/>}
+                                          label={<Typography variant="body2">I understand that my account will be charged as I place the order.</Typography>}/>
+                        <FormControlLabel control={<Checkbox value={consent2} onChange={e=>setConsent2(e.target.checked)}/>}
+                                          label={<Typography variant="body2">I agree to the terms of service.</Typography>}/>
+                    </FormGroup>
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Button onClick={handlePlaceOrder} disabled={!consent1 || !consent2} variant="contained">Place Order</Button>
+                    <Button onClick={handleCancelOrder} variant="contained" color="error" sx={{ml: 1}}>Cancel Order</Button>
+                </Grid>
+            </Grid>}
         </>
     ) : null;
 }

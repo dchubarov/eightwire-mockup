@@ -119,7 +119,7 @@ export function makeApiServer(env?: string): Server {
                             check = false
                         } else {
                             newOrder.payoutFee = payout * payoutMethod!.payoutFee
-                            newOrder.payoutAmount = payout - newOrder.payoutFee
+                            newOrder.payoutAmount = payout
                         }
                     }
                 }
@@ -128,6 +128,16 @@ export function makeApiServer(env?: string): Server {
                     status: check ? "created" : "rejected",
                     ...newOrder
                 })
+            });
+
+            this.delete("/orders/:id", (schema: AppSchema, request) => {
+                const order = schema.find("order", request.params.id)
+                if (order === null || order.status !== "created") {
+                    return new Response(401)
+                } else {
+                    order.destroy()
+                    return new Response(204)
+                }
             });
 
             this.timing = 0;
