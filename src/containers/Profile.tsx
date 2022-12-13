@@ -30,7 +30,7 @@ const Profile: React.FC = () => {
 
     return profile.id ? (
         <>
-            <Typography variant="h4">Profile</Typography>
+            <Typography variant="h4">Profile: {profile.id}</Typography>
 
             <List>
                 <ListItem>

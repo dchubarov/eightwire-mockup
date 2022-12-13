@@ -1,8 +1,8 @@
 [
   {
-    "id": "owner",
-    "kind": "owner",
-    "display": "The Owner"
+    "id": "master",
+    "kind": "master",
+    "display": "Master Account"
   },
   {
     "id": "john",

@@ -23,7 +23,7 @@ const LoginForm: React.FC = () => {
             .then(response => {
                 setCookie("user", response.data.data.id, {path: "/"})
                 setErrorMsg(undefined)
-                navigate("/dashboard")
+                navigate("/profile")
             })
             .catch(() => {
                 setErrorMsg("Invalid user name or password")

@@ -26,14 +26,8 @@ const UserMenu: React.FC<UserMenuProps> = ({user}) => {
     return (
         <List>
             <ListItem>
-                <ListItemButton onClick={() => navigate("/dashboard")}>
+                <ListItemButton onClick={() => navigate("/profile")}>
                     <UserCard user={user} showVerifiedStatus/>
-                </ListItemButton>
-            </ListItem>
-
-            <ListItem sx={UserMenuItemSxProps}>
-                <ListItemButton  onClick={() => navigate("/profile")}>
-                    <ListItemText primary="My Profile"/>
                 </ListItemButton>
             </ListItem>
 

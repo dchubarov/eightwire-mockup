@@ -24,7 +24,7 @@ const PaymentMethodModel: ModelDefinition<PaymentMethodAttributes> = Model.exten
     currency: belongsTo("currency")
 })
 
-type UserKind = "owner" | "customer"
+type UserKind = "master" | "customer"
 
 interface UserAttributes {
     display: string
