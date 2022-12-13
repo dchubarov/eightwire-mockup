@@ -5,16 +5,13 @@ import Schema from "miragejs/orm/schema";
 interface CurrencyAttributes {
     display: string
     symbol: string
-    mde: number
 }
 
 const CurrencyModel: ModelDefinition<CurrencyAttributes> = Model.extend({})
 
 interface ExchangeRateAttributes {
     fromCurrencyId: string
-    fromUnitsMde: number
     toCurrencyId: string
-    toUnitsMde: number
     rate: number
 }
 
@@ -25,13 +22,16 @@ const ExchangeRateModel: ModelDefinition<ExchangeRateAttributes> = Model.extend(
 
 interface RegionAttributes {
     display: string
+    serviceFee: number
 }
 
 const RegionModel: ModelDefinition<RegionAttributes> = Model.extend({})
 
 interface PaymentMethodAttributes {
     display: string
-    currencyId: string
+    currencyId: string,
+    paymentFee: number,
+    payoutFee: number
 }
 
 const PaymentMethodModel: ModelDefinition<PaymentMethodAttributes> = Model.extend({
@@ -56,12 +56,38 @@ const UserModel: ModelDefinition<UserAttributes> = Model.extend({
     trusted: hasMany("user")
 })
 
+type OrderStatus = "created" | "rejected"
+
+export interface OrderAttributes {
+    status: OrderStatus
+    statusMsg: string
+    payerId: string
+    payerMethodId: string
+    payeeId: string
+    payeeMethodId: string
+    paymentAmount: number
+    paymentServiceFee: number
+    paymentFee: number
+    payoutAmount: number
+    payoutFee: number
+    createDate: Date
+    performDate: Date
+}
+
+const OrderModel: ModelDefinition<OrderAttributes> = Model.extend({
+    payer: belongsTo("user"),
+    payerMethod: belongsTo("paymentMethod"),
+    payee: belongsTo("user"),
+    payeeMethod: belongsTo("paymentMethod"),
+})
+
 export const AppModels = {
     currency: CurrencyModel,
     rate: ExchangeRateModel,
     region: RegionModel,
     paymentMethod: PaymentMethodModel,
-    user: UserModel
+    user: UserModel,
+    order: OrderModel
 }
 
 export const AppFactories = {}

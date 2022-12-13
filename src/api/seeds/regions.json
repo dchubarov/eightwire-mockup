@@ -1,10 +1,12 @@
 [
   {
     "id": "usa",
-    "display": "United States"
+    "display": "United States",
+    "serviceFee": 0.02
   },
   {
     "id": "geo",
-    "display": "Georgia"
+    "display": "Georgia",
+    "serviceFee": 0.01
   }
 ]

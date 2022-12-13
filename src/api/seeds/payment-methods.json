@@ -2,11 +2,15 @@
   {
     "id": "john-pm-1",
     "display": "Apple Pay",
-    "currencyId": "usd"
+    "currencyId": "usd",
+    "paymentFee": 0,
+    "payoutFee": 0
   },
   {
     "id": "hanna-pm-1",
     "currencyId": "gel",
-    "display": "Bank account GE341B***123GEL"
+    "display": "Bank account GE341B***123GEL",
+    "paymentFee": 0,
+    "payoutFee": 0.01
   }
 ]

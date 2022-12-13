@@ -20,6 +20,19 @@ test("request user including payment methods", async () => {
     console.debug(JSON.stringify(deserialize(json)))
 })
 
+test("create new order", async () => {
+    const request = {
+        payer: "john",
+        payee: "hanna",
+        amount: 1000
+    }
+
+    const json = await fetch(testServer.namespace + "/orders", {method: "post", body: JSON.stringify(request)})
+        .then(response => response.json())
+
+    console.debug(JSON.stringify(deserialize(json)))
+})
+
 beforeEach(() => {
     testServer = makeApiServer()
 })

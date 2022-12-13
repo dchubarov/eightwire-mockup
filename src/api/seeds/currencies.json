@@ -2,13 +2,11 @@
   {
     "id": "usd",
     "display": "US Dollar",
-    "symbol": "$",
-    "mde": 100
+    "symbol": "$"
   },
   {
     "id": "gel",
     "display": "Georgian Lari",
-    "symbol": "₾",
-    "mde": 100
+    "symbol": "₾"
   }
 ]
