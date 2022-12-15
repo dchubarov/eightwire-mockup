@@ -42,11 +42,24 @@ test("get orders with filter", async () => {
         .then(response => response.json())
 
     console.log(JSON.stringify(deserialize(json)))
-    // if (json.data && json.data.length > 0) {
-    //     json.data.forEach((v: Object) => {
-    //         console.log(JSON.stringify(deserialize(v)))
-    //     })
-    // }
+})
+
+test("reconcile orders", async () => {
+    // create and approve some orders
+    await fetch(testServer.namespace + "/orders", {method: "post", body: JSON.stringify({payer:"giorgi", payee: "mariam", amount: 1000})})
+    await fetch(testServer.namespace + "/orders", {method: "post", body: JSON.stringify({payer:"john", payee: "hanna", amount: 375})})
+    await fetch(testServer.namespace + "/orders/1/approve")
+    await fetch(testServer.namespace + "/orders/2/approve")
+
+    let json = await fetch(testServer.namespace + "/orders/reconcile?ids=1,2")
+        .then(response => response.json())
+
+    console.log(JSON.stringify(json))
+
+    json = await fetch(testServer.namespace + "/orders")
+        .then(response => response.json())
+
+    console.log(JSON.stringify(deserialize(json)))
 })
 
 beforeEach(() => {

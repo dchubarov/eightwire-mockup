@@ -55,7 +55,7 @@ const NewOrderView: React.FC = () => {
 
     const handlePlaceOrder = () => {
         axios.get(`${apiBaseurl()}/orders/${orderDraft.id}/approve`)
-            .then(() => navigate("/orders"))
+            .then(() => navigate("/customer/orders"))
             .catch(() => orderDraft.statusMsg = "Could not place order")
     }
 

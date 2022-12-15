@@ -7,11 +7,13 @@ import ReadmeView from "./ReadmeView";
 import CustomerOrdersView from "./CustomerOrdersView";
 import NewOrderView from "./NewOrderView";
 import CustomerTransactionsView from "./CustomerTransactionsView";
+import MasterOrdersView from "./MasterOrdersView";
 
 const AppRouter = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<Root/>}>
             <Route path="profile" element={<ProfileView/>}/>
+            <Route path="master/orders" element={<MasterOrdersView/>}/>
             <Route path="customer/orders" element={<CustomerOrdersView/>}/>
             <Route path="customer/orders/new" element={<NewOrderView/>}/>
             <Route path="customer/transactions" element={<CustomerTransactionsView/>}/>

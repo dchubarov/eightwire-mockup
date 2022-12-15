@@ -37,6 +37,12 @@ const UserMenu: React.FC<UserMenuProps> = ({user}) => {
                 </ListItemButton>
             </ListItem>}
 
+            {user.kind === "master" && <ListItem sx={UserMenuItemSxProps}>
+                <ListItemButton onClick={() => navigate("/master/orders")}>
+                    <ListItemText primary="Order queue"/>
+                </ListItemButton>
+            </ListItem>}
+
             {user.kind === "customer" && <ListItem sx={UserMenuItemSxProps}>
                 <ListItemButton onClick={() => navigate("/customer/transactions")}>
                     <ListItemText primary="My transactions"/>

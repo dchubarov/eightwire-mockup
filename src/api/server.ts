@@ -165,6 +165,102 @@ export function makeApiServer(env?: string): Server {
                 }
             });
 
+            this.get("/orders/reconcile", (schema: AppSchema, request) => {
+                const orderIds: string[] = request.queryParams.ids ? request.queryParams.ids.split(",") : []
+                if (orderIds.length < 2) {
+                    return new Response(200, undefined,
+                        {statusMsg: "FAIL: at least 2 orders required for reconciliation"})
+                }
+
+                let orders = schema.where("order", item => item.id && orderIds.includes(item.id))
+                if (orders.length !== orderIds.length) {
+                    return new Response(200, undefined,
+                        {statusMsg: "FAIL: Not all orders were found"})
+                }
+
+                const referenceCurrency = "usd"
+                let amountByRegion = new Map<string, number>()
+                orders = orders.filter((order) => {
+                    let paymentMethod = schema.find("paymentMethod", order.payerMethodId)
+                    if (paymentMethod !== null) {
+                        const payer = schema.find("user", order.payerId)
+                        if (payer !== null) {
+                            let a = (amountByRegion.get(payer.regionId) || 0)
+                            if (paymentMethod.currencyId !== referenceCurrency) {
+                                a -= currencyExchange(schema, paymentMethod.currencyId, referenceCurrency,
+                                    order.paymentAmount - order.paymentServiceFee)
+                            } else {
+                                a -= order.paymentAmount - order.paymentServiceFee;
+                            }
+                            amountByRegion.set(payer.regionId, a)
+                        }
+                    }
+
+                    paymentMethod = schema.find("paymentMethod", order.payeeMethodId)
+                    if (paymentMethod !== null) {
+                        const payee = schema.find("user", order.payeeId)
+                        if (payee !== null) {
+                            let a = (amountByRegion.get(payee.regionId) || 0)
+                            if (paymentMethod.currencyId !== referenceCurrency) {
+                                a += currencyExchange(schema, paymentMethod.currencyId, referenceCurrency,
+                                    order.payoutAmount + order.payoutFee)
+                            } else {
+                                a += order.payoutAmount + order.payoutFee;
+                            }
+                            amountByRegion.set(payee.regionId, a)
+                        }
+                    }
+                    return true
+                })
+
+                if (amountByRegion.size !== 2) {
+                    return new Response(200, undefined,
+                        {statusMsg: "FAIL: reconciliation must include counter orders from two regions"})
+                }
+
+                let diff = NaN
+                amountByRegion.forEach((a) => {
+                    diff = isNaN(diff) ? a : diff - a
+                })
+                if (Math.abs(diff) > 10) {
+                    return new Response(200, undefined,
+                        {statusMsg: "FAIL: counter orders differ by more than 10 USD"})
+                }
+
+                // create txs
+                orders = orders.filter(order => {
+                    let paymentMethod = schema.find("paymentMethod", order.payerMethodId)
+                    if (paymentMethod !== null) {
+                        const payer = schema.find("user", order.payerId)
+                        if (payer !== null) {
+                            schema.create("transaction", {
+                                fromAccountId: paymentMethod.id,
+                                toAccountId: `master-${payer.regionId}-main`,
+                                amount: order.paymentAmount
+                            })
+                        }
+                    }
+
+                    paymentMethod = schema.find("paymentMethod", order.payeeMethodId)
+                    if (paymentMethod !== null) {
+                        const payee = schema.find("user", order.payeeId)
+                        if (payee !== null) {
+                            schema.create("transaction", {
+                                fromAccountId: `master-${payee.regionId}-main`,
+                                toAccountId: paymentMethod.id,
+                                amount: order.payoutAmount
+                            })
+                        }
+                    }
+
+                    order.status = "completed"
+                    return true
+                })
+
+                orders.save()
+                return new Response(200, undefined, {statusMsg: "OK"})
+            });
+
             this.get("/transactions", (schema: AppSchema, request) => {
                 const predicate = (tx: Instantiate<AppRegistry, "transaction">) => {
                     let matchesFrom = false
