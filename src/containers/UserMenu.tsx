@@ -1,10 +1,10 @@
 import React from "react";
-import {LoginUser} from "../../hooks";
+import {LoginUser} from "../hooks";
 import {List, ListItem, ListItemButton, ListItemText, SxProps, Typography} from "@mui/material";
 import {Logout as LogoutIcon} from "@mui/icons-material";
 import {useCookies} from "react-cookie";
 import {useNavigate} from "react-router-dom";
-import UserCard from "../../components/UserCard";
+import UserCard from "../components/UserCard";
 
 interface UserMenuProps {
     user: LoginUser
@@ -32,16 +32,16 @@ const UserMenu: React.FC<UserMenuProps> = ({user}) => {
             </ListItem>
 
             {user.kind === "customer" && <ListItem sx={UserMenuItemSxProps}>
-                <ListItemButton onClick={() => navigate("/orders")}>
+                <ListItemButton onClick={() => navigate("/customer/orders")}>
                     <ListItemText primary="My transfers"/>
                 </ListItemButton>
             </ListItem>}
 
-            <ListItem sx={UserMenuItemSxProps}>
-                <ListItemButton onClick={() => navigate("/transactions")}>
+            {user.kind === "customer" && <ListItem sx={UserMenuItemSxProps}>
+                <ListItemButton onClick={() => navigate("/customer/transactions")}>
                     <ListItemText primary="My transactions"/>
                 </ListItemButton>
-            </ListItem>
+            </ListItem>}
 
             <ListItem sx={UserMenuItemSxProps}>
                 <ListItemButton onClick={handleSignOut}>

@@ -4,7 +4,7 @@ import {Login as LoginIcon} from "@mui/icons-material";
 import axios from "axios";
 import {useCookies} from "react-cookie";
 import {useNavigate} from "react-router-dom";
-import {apiBaseurl} from "../../api/client";
+import {apiBaseurl} from "../api/client";
 
 const FormSxProps: SxProps = {
     p: 2,

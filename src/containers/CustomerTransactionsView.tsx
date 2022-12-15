@@ -5,7 +5,7 @@ import axios from "axios";
 import {apiBaseurl} from "../api/client";
 import {deserialize} from "../api/json-api-deserialize";
 
-const TransactionsView: React.FC = () => {
+const CustomerTransactionsView: React.FC = () => {
     const [transactions, setTransactions] = useState<Object[]>([])
     const loginUser = useLoginUser()
 
@@ -31,4 +31,4 @@ const TransactionsView: React.FC = () => {
     </>) : null
 }
 
-export default TransactionsView;
+export default CustomerTransactionsView;

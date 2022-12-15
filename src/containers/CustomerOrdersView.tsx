@@ -18,7 +18,7 @@ import {Add as AddIcon} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import {apiBaseurl} from "../api/client";
 
-const OrdersView: React.FC = () => {
+const CustomerOrdersView: React.FC = () => {
     const [outgoingOrders, setOutgoingOrders] = useState<Object[]>([])
     const [incomingOrders, setIncomingOrders] = useState<Object[]>([])
     const loginUser = useLoginUser()
@@ -109,4 +109,4 @@ const OrdersView: React.FC = () => {
     ) : null
 }
 
-export default OrdersView;
+export default CustomerOrdersView;

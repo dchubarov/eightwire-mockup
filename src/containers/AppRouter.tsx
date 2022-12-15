@@ -1,20 +1,20 @@
 import React from "react";
 import {createBrowserRouter, createRoutesFromElements, Route} from "react-router-dom";
 
-import Root from "./App/Root";
+import Root from "./Root";
 import ProfileView from "./ProfileView";
 import ReadmeView from "./ReadmeView";
-import OrdersView from "./OrdersView";
+import CustomerOrdersView from "./CustomerOrdersView";
 import NewOrderView from "./NewOrderView";
-import TransactionsView from "./TransactionsView";
+import CustomerTransactionsView from "./CustomerTransactionsView";
 
 const AppRouter = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<Root/>}>
             <Route path="profile" element={<ProfileView/>}/>
-            <Route path="orders" element={<OrdersView/>}/>
-            <Route path="orders/new" element={<NewOrderView/>}/>
-            <Route path="transactions" element={<TransactionsView/>}/>
+            <Route path="customer/orders" element={<CustomerOrdersView/>}/>
+            <Route path="customer/orders/new" element={<NewOrderView/>}/>
+            <Route path="customer/transactions" element={<CustomerTransactionsView/>}/>
             <Route path="*" element={<ReadmeView/>}/>
             <Route index element={<ReadmeView/>}/>
         </Route>

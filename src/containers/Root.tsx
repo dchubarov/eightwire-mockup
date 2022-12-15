@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {Box, CssBaseline} from "@mui/material";
 import Sidebar from "./Sidebar";
 import {Outlet, useLocation} from "react-router-dom";
-import {useLoginUser} from "../../hooks";
+import {useLoginUser} from "../hooks";
 
 const Root: React.FC = () => {
     const loginUser = useLoginUser()

@@ -1,7 +1,7 @@
 import React from "react";
 import {Drawer, SxProps} from "@mui/material";
 import {grey} from "@mui/material/colors";
-import {useLoginUser} from "../../hooks";
+import {useLoginUser} from "../hooks";
 import LoginForm from "./LoginForm";
 import UserMenu from "./UserMenu";
 import {Link} from "react-router-dom";
