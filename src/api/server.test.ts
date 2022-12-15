@@ -62,6 +62,21 @@ test("reconcile orders", async () => {
     console.log(JSON.stringify(deserialize(json)))
 })
 
+test("get transactions", async () => {
+    // create some transactions
+    await fetch(testServer.namespace + "/orders", {method: "post", body: JSON.stringify({payer:"giorgi", payee: "mariam", amount: 1000})})
+    await fetch(testServer.namespace + "/orders", {method: "post", body: JSON.stringify({payer:"john", payee: "hanna", amount: 375})})
+    await fetch(testServer.namespace + "/orders/1/approve")
+    await fetch(testServer.namespace + "/orders/2/approve")
+    await fetch(testServer.namespace + "/orders/reconcile?ids=1,2")
+
+    const json = await fetch(testServer.namespace + "/transactions?from=john-apay&include=fromAccount,toAccount")
+        .then(response => response.json())
+
+    console.log(JSON.stringify(deserialize(json)))
+
+})
+
 beforeEach(() => {
     testServer = makeApiServer()
 })

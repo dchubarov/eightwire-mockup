@@ -236,7 +236,12 @@ export function makeApiServer(env?: string): Server {
                             schema.create("transaction", {
                                 fromAccountId: paymentMethod.id,
                                 toAccountId: `master-${payer.regionId}-main`,
-                                amount: order.paymentAmount
+                                amount: order.paymentAmount - order.paymentServiceFee
+                            })
+                            schema.create("transaction", {
+                                fromAccountId: paymentMethod.id,
+                                toAccountId: `master-${payer.regionId}-fee`,
+                                amount: order.paymentServiceFee
                             })
                         }
                     }
@@ -264,11 +269,13 @@ export function makeApiServer(env?: string): Server {
             this.get("/transactions", (schema: AppSchema, request) => {
                 const predicate = (tx: Instantiate<AppRegistry, "transaction">) => {
                     let matchesFrom = false
-                    if (request.params.from && tx.fromAccountId === request.params.from) {
+                    if (request.queryParams.from && request.queryParams.from !== "" &&
+                        tx.fromAccountId === request.queryParams.from) {
                         matchesFrom = true
                     }
                     let matchesTo = false
-                    if (request.params.to && tx.fromAccountId === request.params.to) {
+                    if (request.queryParams.to && request.queryParams.to !== "" &&
+                        tx.toAccountId === request.queryParams.to) {
                         matchesTo = true
                     }
                     return matchesFrom || matchesTo
