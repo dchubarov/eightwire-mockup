@@ -1,7 +1,8 @@
 import {useCookies} from "react-cookie";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {deserialize} from "json-api-deserialize";
+import {deserialize} from "./api/json-api-deserialize";
+import {apiBaseurl} from "./api/client";
 
 export interface LoginUser {
     id?: string,
@@ -16,18 +17,23 @@ export function useLoginUser(): LoginUser {
     const [cookies] = useCookies(["user"])
     useEffect(() => {
         if (cookies.user) {
-            axios.get(`/api/users/${cookies.user}?include=region`)
+            axios.get(`${apiBaseurl()}/users/${cookies.user}?include=region`)
                 .then(response => {
-                    const userdata = deserialize(response.data)
-                    setLoginUser({
-                        id: userdata.data.id,
-                        display: userdata.data.display,
-                        kind: userdata.data.kind,
-                        verified: userdata.data.verified,
-                        region: userdata.data.region.display || userdata.data.region.id
-                    })
+                    const userdata = deserialize(response.data).data as any
+                    if (userdata) {
+                        setLoginUser({
+                            id: userdata.id,
+                            display: userdata.display,
+                            kind: userdata.kind,
+                            verified: userdata.verified,
+                            region: userdata.region.display || userdata.region.id,
+                        })
+                    }
                 })
-                .catch(() => setLoginUser({}))
+                .catch((reason) => {
+                    console.warn(reason)
+                    setLoginUser({})
+                })
         } else {
             setLoginUser({})
         }

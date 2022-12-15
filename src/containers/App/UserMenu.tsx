@@ -31,11 +31,11 @@ const UserMenu: React.FC<UserMenuProps> = ({user}) => {
                 </ListItemButton>
             </ListItem>
 
-            <ListItem sx={UserMenuItemSxProps}>
+            {user.kind === "customer" && <ListItem sx={UserMenuItemSxProps}>
                 <ListItemButton onClick={() => navigate("/orders")}>
-                    <ListItemText primary="Money transfer orders"/>
+                    <ListItemText primary="My transfers"/>
                 </ListItemButton>
-            </ListItem>
+            </ListItem>}
 
             <ListItem sx={UserMenuItemSxProps}>
                 <ListItemButton onClick={() => navigate("/transactions")}>

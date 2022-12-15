@@ -16,7 +16,7 @@ const AppRouter = createBrowserRouter(
             <Route path="*" element={<ReadmeView/>}/>
             <Route index element={<ReadmeView/>}/>
         </Route>
-    )
+    ), {basename: process.env.REACT_APP_UI_ROOT || "/"}
 );
 
 export default AppRouter;

@@ -56,7 +56,7 @@ const UserModel: ModelDefinition<UserAttributes> = Model.extend({
     trusted: hasMany("user")
 })
 
-type OrderStatus = "created" | "rejected"
+type OrderStatus = "created" | "rejected" | "pending" | "completed"
 
 export interface OrderAttributes {
     status: OrderStatus

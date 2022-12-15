@@ -8,11 +8,12 @@ import initialRegions from "./seeds/regions.json"
 import initialPaymentMethods from "./seeds/payment-methods.json"
 import initialUsers from "./seeds/users.json"
 import {Instantiate} from "miragejs/-types";
+import {apiBaseurl} from "./client";
 
 export function makeApiServer(env?: string): Server {
     return createServer({
         logging: process.env.NODE_ENV === "development",
-        namespace: "/api",
+        namespace: apiBaseurl(),
         environment: env,
         models: AppModels,
         factories: AppFactories,
@@ -37,18 +38,6 @@ export function makeApiServer(env?: string): Server {
 
             this.get("/users/:id", (schema: AppSchema, request) => {
                 return schema.find("user", request.params.id) || new Response(404)
-            });
-
-            this.get("/orders", (schema: AppSchema, request) => {
-                if (request.queryParams.payer) {
-                    return schema.where("order", {payerId: request.queryParams.payer})
-                } else {
-                    return schema.all("order")
-                }
-            });
-
-            this.get("/orders/:id", (schema: AppSchema, request) => {
-                return schema.find("order", request.params.id) || new Response(404)
             });
 
             this.post("/orders", (schema: AppSchema, request) => {
@@ -128,6 +117,42 @@ export function makeApiServer(env?: string): Server {
                     status: check ? "created" : "rejected",
                     ...newOrder
                 })
+            });
+
+            this.get("/orders", (schema: AppSchema, request) => {
+                let statuses: string[] = []
+                if (request.queryParams.status) {
+                    statuses = request.queryParams.status.split(",")
+                }
+
+                const predicate = (order: Instantiate<AppRegistry, "order">) => {
+                    let ok = true
+
+                    if (ok && statuses.length > 0)
+                        ok = statuses.includes(order.status)
+                    if (ok && request.queryParams.payer)
+                        ok = order.payerId === request.queryParams.payer
+                    if (ok && request.queryParams.payee)
+                        ok = order.payeeId === request.queryParams.payee
+
+                    return ok
+                }
+
+                return schema.where("order", predicate)
+            });
+
+            this.get("/orders/:id", (schema: AppSchema, request) => {
+                return schema.find("order", request.params.id) || new Response(404)
+            });
+
+            this.get("/orders/:id/approve", (schema: AppSchema, request) => {
+                const order = schema.find("order", request.params.id)
+                if (order !== null && order.status === "created") {
+                    order.status = "pending"
+                    order.save()
+                    return new Response(204)
+                }
+                return new Response(404)
             });
 
             this.delete("/orders/:id", (schema: AppSchema, request) => {

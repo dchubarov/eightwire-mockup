@@ -4,7 +4,7 @@ import {NavigateNext as ArrowRightIcon} from "@mui/icons-material";
 import {grey} from "@mui/material/colors";
 
 interface ViewTitleProps {
-    title: string
+    title: string | string[]
     username?: string
 }
 
@@ -15,7 +15,13 @@ const PageTitle: React.FC<ViewTitleProps> = ({title, username}) => {
                 <Typography variant="h4">{username}</Typography>
                 <ArrowRightIcon color="inherit"/>
             </>}
-            <Typography variant="h4">{title.toLowerCase()}</Typography>
+            {typeof title === "string" ?
+                <Typography variant="h4">{title.toLowerCase()}</Typography> :
+                title.filter(item => item !== "").map((item, index, arr) =>
+                    <React.Fragment key={`t-${index}`}>
+                        <Typography variant="h4">{title[index].toLowerCase()}</Typography>
+                        {index < arr.length - 1 && <ArrowRightIcon color="inherit"/>}
+                    </React.Fragment>)}
         </Box>
     )
 }

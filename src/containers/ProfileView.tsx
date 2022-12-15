@@ -3,7 +3,7 @@ import {List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import {useLoginUser} from "../hooks";
 import axios from "axios";
-import {deserialize} from "json-api-deserialize";
+import {deserialize} from "../api/json-api-deserialize";
 import {
     AccountBalanceWallet as PayOutIcon,
     AccountBalanceWalletOutlined as PaymentIcon,
@@ -14,6 +14,7 @@ import {
 } from "@mui/icons-material";
 import UserCard from "../components/UserCard";
 import PageTitle from "../components/PageTitle";
+import {apiBaseurl} from "../api/client";
 
 const ProfileView: React.FC = () => {
     const [profile, setProfile] = useState<any>({})
@@ -22,7 +23,7 @@ const ProfileView: React.FC = () => {
 
     useEffect(() => {
         if (loginUser.id) {
-            axios.get(`/api/users/${loginUser.id}?include=region,pay-in.currency,pay-out.currency,trusted.region`)
+            axios.get(`${apiBaseurl()}/users/${loginUser.id}?include=region,pay-in.currency,pay-out.currency,trusted.region`)
                 .then(response => deserialize(response.data))
                 .then(deserialized => setProfile(deserialized.data))
                 .catch(() => setProfile({}))

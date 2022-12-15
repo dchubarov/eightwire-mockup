@@ -19,8 +19,9 @@ import {
     NavigateNext as NextStepIcon,
 } from "@mui/icons-material";
 import axios from "axios";
-import {deserialize} from "json-api-deserialize";
+import {deserialize} from "../api/json-api-deserialize";
 import {useNavigate} from "react-router-dom";
+import {apiBaseurl} from "../api/client";
 
 const NewOrderView: React.FC = () => {
     const [payerData, setPayerData] = useState<any>({})
@@ -34,7 +35,7 @@ const NewOrderView: React.FC = () => {
 
     useEffect(() => {
         if (loginUser.id) {
-            axios.get(`/api/users/${loginUser.id}?include=pay-in.currency,trusted`)
+            axios.get(`${apiBaseurl()}/users/${loginUser.id}?include=pay-in.currency,trusted`)
                 .then(response => setPayerData(deserialize(response.data).data))
                 .catch(() => setPayerData({}))
         }
@@ -47,22 +48,25 @@ const NewOrderView: React.FC = () => {
             amount: amount
         }
 
-        axios.post(`/api/orders?include=payer-method.currency,payee-method.currency`, req)
+        axios.post(`${apiBaseurl()}/orders?include=payer-method.currency,payee-method.currency`, req)
             .then(response => setOrderDraft(deserialize(response.data).data))
             .catch(() => setOrderDraft({}))
     }
 
     const handlePlaceOrder = () => {
+        axios.get(`${apiBaseurl()}/orders/${orderDraft.id}/approve`)
+            .then(() => navigate("/orders"))
+            .catch(() => orderDraft.statusMsg = "Could not place order")
     }
 
-    const handleCancelOrder = async () => {
-        await axios.delete(`/api/orders/${orderDraft.id}`)
-        navigate("/orders")
+    const handleCancelOrder = () => {
+        axios.delete(`${apiBaseurl()}/orders/${orderDraft.id}`)
+            .finally(() => setOrderDraft({}))
     }
 
     return loginUser.id ? (
         <>
-            <PageTitle title="New order" username={loginUser.id}/>
+            <PageTitle title={["Orders", orderDraft.id ? `#${orderDraft.id}` : "New"]} username={loginUser.id}/>
 
             {(orderDraft.status !== "created" && payerData.id) && <List>
                 <ListItem>
@@ -110,6 +114,11 @@ const NewOrderView: React.FC = () => {
                                }}/>
                 </ListItem>
 
+                {orderDraft.status === "rejected" && <ListItem sx={{pl: 8, color: "red"}}>
+                    <ListItemText primary="Your order has been rejected"
+                                  secondary={orderDraft.statusMsg}/>
+                </ListItem>}
+
                 <ListItem sx={{pl: 8}}>
                     <Button
                         onClick={handleCreateDraft}
@@ -121,10 +130,6 @@ const NewOrderView: React.FC = () => {
             </List>}
 
             {orderDraft.status === "created" && <Grid spacing={1} container>
-                <Grid item xs={12}>
-                    <Typography variant="h6">Order #{orderDraft.id}</Typography>
-                </Grid>
-
                 <Grid item xs={8}>You pay:</Grid>
                 <Grid item xs textAlign="right">
                     {`${orderDraft.paymentAmount} ${orderDraft.payerMethod.currency.id.toUpperCase()}`}
@@ -164,6 +169,10 @@ const NewOrderView: React.FC = () => {
                                           label={<Typography variant="body2">I agree to the terms of service.</Typography>}/>
                     </FormGroup>
                 </Grid>
+
+                {orderDraft.statusMsg && <Grid item xs={12}>
+                    <Typography color="error">{orderDraft.statusMsg}</Typography>
+                </Grid>}
 
                 <Grid item xs={12}>
                     <Button onClick={handlePlaceOrder} disabled={!consent1 || !consent2} variant="contained">Place Order</Button>

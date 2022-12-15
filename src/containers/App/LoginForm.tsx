@@ -4,6 +4,7 @@ import {Login as LoginIcon} from "@mui/icons-material";
 import axios from "axios";
 import {useCookies} from "react-cookie";
 import {useNavigate} from "react-router-dom";
+import {apiBaseurl} from "../../api/client";
 
 const FormSxProps: SxProps = {
     p: 2,
@@ -19,7 +20,7 @@ const LoginForm: React.FC = () => {
 
     const handleSignIn = (e: FormEvent<HTMLFormElement>) => {
 
-        axios.get(`/api/users/${username}`)
+        axios.get(`${apiBaseurl()}/users/${username}`)
             .then(response => {
                 setCookie("user", response.data.data.id, {path: "/"})
                 setErrorMsg(undefined)
