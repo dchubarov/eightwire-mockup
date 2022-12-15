@@ -165,6 +165,22 @@ export function makeApiServer(env?: string): Server {
                 }
             });
 
+            this.get("/transactions", (schema: AppSchema, request) => {
+                const predicate = (tx: Instantiate<AppRegistry, "transaction">) => {
+                    let matchesFrom = false
+                    if (request.params.from && tx.fromAccountId === request.params.from) {
+                        matchesFrom = true
+                    }
+                    let matchesTo = false
+                    if (request.params.to && tx.fromAccountId === request.params.to) {
+                        matchesTo = true
+                    }
+                    return matchesFrom || matchesTo
+                }
+
+                return schema.where("transaction", predicate)
+            })
+
             this.timing = 0;
         }
     })

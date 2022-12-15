@@ -81,13 +81,25 @@ const OrderModel: ModelDefinition<OrderAttributes> = Model.extend({
     payeeMethod: belongsTo("paymentMethod"),
 })
 
+export interface TransactionAttributes {
+    fromAccountId: string
+    toAccountId: string
+    amount: number
+}
+
+const TransactionModel: ModelDefinition<TransactionAttributes> = Model.extend({
+    fromAccount: belongsTo("paymentMethod"),
+    toAccount: belongsTo("paymentMethod"),
+})
+
 export const AppModels = {
     currency: CurrencyModel,
     rate: ExchangeRateModel,
     region: RegionModel,
     paymentMethod: PaymentMethodModel,
     user: UserModel,
-    order: OrderModel
+    order: OrderModel,
+    transaction: TransactionModel,
 }
 
 export const AppFactories = {}

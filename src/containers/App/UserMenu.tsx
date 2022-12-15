@@ -39,7 +39,7 @@ const UserMenu: React.FC<UserMenuProps> = ({user}) => {
 
             <ListItem sx={UserMenuItemSxProps}>
                 <ListItemButton onClick={() => navigate("/transactions")}>
-                    <ListItemText primary="Transactions"/>
+                    <ListItemText primary="My transactions"/>
                 </ListItemButton>
             </ListItem>
 
