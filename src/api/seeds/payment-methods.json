@@ -1,16 +1,65 @@
 [
   {
-    "id": "john-pm-1",
+    "id": "master-usa-main",
+    "display": "Master Account USA",
+    "currencyId": "usd",
+    "paymentFee": 0,
+    "PayoutFee": 0
+  },
+  {
+    "id": "master-usa-fee",
+    "display": "Master Account USA (Fees)",
+    "currencyId": "usd",
+    "paymentFee": 0,
+    "PayoutFee": 0
+  },
+  {
+    "id": "master-geo-main",
+    "display": "Master Account GEO",
+    "currencyId": "gel",
+    "paymentFee": 0,
+    "PayoutFee": 0
+  },
+  {
+    "id": "master-geo-fee",
+    "display": "Master Account GEO (Fees)",
+    "currencyId": "gel",
+    "paymentFee": 0,
+    "PayoutFee": 0
+  },
+  {
+    "id": "john-apay",
     "display": "Apple Pay",
     "currencyId": "usd",
     "paymentFee": 0,
     "payoutFee": 0
   },
   {
-    "id": "hanna-pm-1",
+    "id": "hanna-account",
     "currencyId": "gel",
     "display": "Bank account GE341B***123GEL",
     "paymentFee": 0,
+    "payoutFee": 0.01
+  },
+  {
+    "id": "giorgi-card",
+    "currencyId": "gel",
+    "display": "Bank card 4202***0091",
+    "paymentFee": 0,
+    "payoutFee": 0
+  },
+  {
+    "id": "giorgi-account",
+    "currencyId": "gel",
+    "display": "Bank account GE341B***432GEL",
+    "paymentFee": 0,
+    "payoutFee": 0.02
+  },
+  {
+    "id": "mariam-paypal",
+    "currencyId": "usd",
+    "display": "PayPal m***@paypal.com",
+    "paymentFee": 0.01,
     "payoutFee": 0.01
   }
 ]

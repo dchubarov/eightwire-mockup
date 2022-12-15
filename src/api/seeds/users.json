@@ -10,7 +10,7 @@
     "verified": true,
     "display": "John D.",
     "regionId": "usa",
-    "payInId": "john-pm-1",
+    "payInId": "john-apay",
     "trustedIds": ["hanna"]
   },
   {
@@ -19,8 +19,28 @@
     "verified": true,
     "display": "Hanna L.",
     "regionId": "geo",
-    "payInId": "hanna-pm-1",
-    "payOutId": "hanna-pm-1",
+    "payInId": "hanna-account",
+    "payOutId": "hanna-account",
     "trustedIds": ["john"]
+  },
+  {
+    "id": "giorgi",
+    "kind": "customer",
+    "verified": true,
+    "display": "Giorgi H.",
+    "regionId": "geo",
+    "payInId": "giorgi-card",
+    "payOutId": "giorgi-account",
+    "trustedIds": ["mariam"]
+  },
+  {
+    "id": "mariam",
+    "kind": "customer",
+    "verified": true,
+    "display": "Mariam H.",
+    "regionId": "usa",
+    "payInId": "mariam-paypal",
+    "payOutId": "mariam-paypal",
+    "trustedIds": ["giorgi"]
   }
 ]
