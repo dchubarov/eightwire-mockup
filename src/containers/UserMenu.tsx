@@ -19,7 +19,7 @@ const UserMenu: React.FC<UserMenuProps> = ({user}) => {
     const navigate = useNavigate()
 
     const handleSignOut = () => {
-        removeCookie("user")
+        removeCookie("user", {path: process.env.REACT_APP_UI_ROOT || "/"})
         navigate("/", {replace: true})
     }
 

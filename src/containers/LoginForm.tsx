@@ -22,7 +22,7 @@ const LoginForm: React.FC = () => {
 
         axios.get(`${apiBaseurl()}/users/${username}`)
             .then(response => {
-                setCookie("user", response.data.data.id, {path: "/"})
+                setCookie("user", response.data.data.id, {path: process.env.REACT_APP_UI_ROOT || "/"})
                 setErrorMsg(undefined)
                 navigate("/profile")
             })

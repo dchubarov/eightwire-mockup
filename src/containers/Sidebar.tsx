@@ -24,7 +24,7 @@ const Sidebar: React.FC = () => {
     return (
         <Drawer anchor="left" variant="permanent" sx={SidebarSxProps}>
             <Link to="/">
-                <img src="/logo.png" width="300" height="80" alt="Logo"/>
+                <img src={`${process.env.PUBLIC_URL}/img/logo.png`} width="300" height="80" alt="Logo"/>
             </Link>
             {loginUser.id ? <UserMenu user={loginUser}/> : <LoginForm/>}
         </Drawer>

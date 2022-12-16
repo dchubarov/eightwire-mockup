@@ -8,7 +8,7 @@ interface UserCardProps {
 }
 
 const UserAvatar: React.FC<{ id: string }> = ({id}) => (
-    <Avatar src={`/img/avatar/${id}.png`} variant="circular">
+    <Avatar src={`${process.env.PUBLIC_URL}/img/avatar/${id}.png`} variant="circular">
         <UserIcon/>
     </Avatar>
 )
