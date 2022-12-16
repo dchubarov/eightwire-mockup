@@ -26,7 +26,12 @@ jobs:
         with: 
           node-version: 16
           cache: npm
-          
+
+      - name: configure-production environment
+        run: |
+          echo "REACT_APP_UI_ROOT=/eightwire-mockup" > .env.production
+          echo "REACT_APP_API_ROOT=/eightwire-mockup/api" >> .env.production
+
       - name: build
         run: npm install && npm run build --if-present
         
